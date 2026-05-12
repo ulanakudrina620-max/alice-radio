@@ -57,25 +57,15 @@ def main():
         "station": current_station,
         "stream_url": RADIO[current_station]
     })
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
-    from flask import Flask, jsonify
 import os
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def home():
-    return jsonify({
-        "status": "ok",
-        "message": "сервер работает"
-    })
+    return jsonify({"status": "ok"})
 
-port = int(os.environ.get("PORT", 10000))
-
-app.run(
-    host="0.0.0.0",
-    port=port
-)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
