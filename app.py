@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+import os
 
 app = Flask(__name__)
 
@@ -10,33 +11,26 @@ RADIO = {
 
 current_station = "1010 wins"
 
-
-@app.route("/", methods=["POST", "GET"])
+@app.route("/", methods=["GET", "POST"])
 def main():
     global current_station
 
     data = request.get_json(silent=True) or {}
     command = data.get("request", {}).get("command", "").lower()
 
-    text = "Скажи: новости, Bloomberg или WNYC"
+    text = "Скажи: новости, bloomberg или wnyc"
 
-    if "новости" in command or "news" in command:
+    if "новости" in command:
         current_station = "1010 wins"
-        text = "Включаю новости Нью-Йорка — 1010 WINS"
+        text = "Включаю новости Нью-Йорка"
 
-    elif "блумберг" in command or "bloomberg" in command:
+    elif "bloomberg" in command:
         current_station = "bloomberg"
-        text = "Включаю Bloomberg Radio"
+        text = "Включаю Bloomberg"
 
     elif "wnyc" in command:
         current_station = "wnyc"
         text = "Включаю WNYC"
-
-    elif "следующая" in command:
-        keys = list(RADIO.keys())
-        idx = (keys.index(current_station) + 1) % len(keys)
-        current_station = keys[idx]
-        text = f"Переключаю на {current_station}"
 
     return jsonify({
         "response": {
@@ -49,6 +43,5 @@ def main():
 
 
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
