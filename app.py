@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-# 🎧 радиостанции Нью-Йорка
 RADIO = {
     "1010 wins": "https://playerservices.streamtheworld.com/api/livestream-redirect/WINSAM.mp3",
     "bloomberg": "https://playerservices.streamtheworld.com/api/livestream-redirect/WBBRAMAAC.aac",
@@ -16,56 +15,40 @@ current_station = "1010 wins"
 def main():
     global current_station
 
-    data = request.get_json(silent=True)
-    command = ""
+    data = request.get_json(silent=True) or {}
+    command = data.get("request", {}).get("command", "").lower()
 
-    if data and "request" in data:
-        command = data["request"].get("command", "").lower()
+    text = "Скажи: новости, Bloomberg или WNYC"
 
-    response_text = "Не понял команду"
-
-    # 🎙 команды
     if "новости" in command or "news" in command:
         current_station = "1010 wins"
-        response_text = "Включаю новости Нью-Йорка — 1010 WINS"
+        text = "Включаю новости Нью-Йорка — 1010 WINS"
 
     elif "блумберг" in command or "bloomberg" in command:
         current_station = "bloomberg"
-        response_text = "Включаю Bloomberg Radio"
+        text = "Включаю Bloomberg Radio"
 
     elif "wnyc" in command:
         current_station = "wnyc"
-        response_text = "Включаю WNYC"
-
-    elif "радио" in command or "нью-йорк" in command:
-        response_text = "Радио Нью-Йорк. Скажи: новости, Bloomberg или WNYC"
+        text = "Включаю WNYC"
 
     elif "следующая" in command:
-        stations = list(RADIO.keys())
-        idx = (stations.index(current_station) + 1) % len(stations)
-        current_station = stations[idx]
-        response_text = f"Переключаю на {current_station}"
-
-    else:
-        response_text = "Скажи: включи новости, Bloomberg или WNYC"
+        keys = list(RADIO.keys())
+        idx = (keys.index(current_station) + 1) % len(keys)
+        current_station = keys[idx]
+        text = f"Переключаю на {current_station}"
 
     return jsonify({
         "response": {
-            "text": response_text,
+            "text": text,
             "end_session": False
         },
         "station": current_station,
         "stream_url": RADIO[current_station]
     })
-import os
-from flask import Flask, jsonify
 
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return jsonify({"status": "ok"})
 
 if __name__ == "__main__":
+    import os
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
