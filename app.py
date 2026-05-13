@@ -3,17 +3,35 @@ import os
 
 app = Flask(__name__)
 
-# 🎧 СТАБИЛЬНЫЕ РАДИО СТАНЦИИ
+# 🎧 Радио (каждая станция = список потоков)
 RADIO = {
-    # 🗞️ News (NYC)
-    "news": "https://playerservices.streamtheworld.com/api/livestream-redirect/WINSAM.mp3",
-    "bloomberg": "https://playerservices.streamtheworld.com/api/livestream-redirect/WBBRAMAAC.aac",
-    "wnyc": "https://fm939.wnyc.org/wnycfm",
+    "news": [
+        "https://playerservices.streamtheworld.com/api/livestream-redirect/WINSAM.mp3"
+    ],
 
-    # 🌍 СТАБИЛЬНАЯ МУЗЫКА
-    "bbc1": "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_one",
-    "bbc2": "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_two",
-    "soma": "https://ice1.somafm.com/groovesalad-128-mp3"
+    "bloomberg": [
+        "https://playerservices.streamtheworld.com/api/livestream-redirect/WBBRAMAAC.aac"
+    ],
+
+    "wnyc": [
+        "https://fm939.wnyc.org/wnycfm"
+    ],
+
+    # 🎶 музыка (с резервами)
+    "bbc1": [
+        "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_one",
+        "https://icecast.radiofrance.fr/fip-hifi.aac"
+    ],
+
+    "bbc2": [
+        "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_two",
+        "https://icecast.radiofrance.fr/fip-midfi.mp3"
+    ],
+
+    "soma": [
+        "https://ice1.somafm.com/groovesalad-128-mp3",
+        "https://ice1.somafm.com/dronezone-128-mp3"
+    ]
 }
 
 
@@ -96,7 +114,7 @@ audio {{
 
     <hr style="margin:10px 0; opacity:0.3;">
 
-    <!-- 🌍 Stable Music -->
+    <!-- 🎶 Music -->
     <button class="bbc" onclick="play('bbc1')">BBC Radio 1 🎶</button>
     <button class="bbc" onclick="play('bbc2')">BBC Radio 2 🎧</button>
     <button class="soma" onclick="play('soma')">SomaFM 🌌</button>
@@ -106,18 +124,43 @@ audio {{
 
 <script>
 function play(station) {{
-    const streams = {{
-        news: "{RADIO['news']}",
-        bloomberg: "{RADIO['bloomberg']}",
-        wnyc: "{RADIO['wnyc']}",
-        bbc1: "{RADIO['bbc1']}",
-        bbc2: "{RADIO['bbc2']}",
-        soma: "{RADIO['soma']}"
-    }};
+
+    const streams = {RADIO};
 
     let audio = document.getElementById("audio");
-    audio.src = streams[station];
-    audio.play();
+    let list = streams[station];
+    let index = 0;
+
+    function tryNext() {{
+        if (index >= list.length) {{
+            console.log("All streams failed:", station);
+            return;
+        }}
+
+        let url = list[index];
+        console.log("Trying:", url);
+
+        audio.src = url;
+
+        audio.play().catch(() => {{
+            index++;
+            tryNext();
+        }});
+
+        let timer = setTimeout(() => {{
+            if (audio.readyState < 2) {{
+                index++;
+                tryNext();
+            }}
+        }}, 5000);
+
+        audio.onplaying = () => {{
+            clearTimeout(timer);
+            console.log("Playing:", url);
+        }};
+    }}
+
+    tryNext();
 }}
 </script>
 
