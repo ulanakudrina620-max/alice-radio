@@ -23,19 +23,42 @@ def home():
 <!DOCTYPE html>
 <html>
 <head>
-<title>XP NEXT LEVEL DESKTOP</title>
+<title>XP NEXT OS LEVEL</title>
 
 <style>
 
+/* 🧠 CRT / OLD MONITOR EFFECT */
 body {{
     margin: 0;
     font-family: Tahoma;
     background:
-    linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.95)),
+    linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.95)),
     url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=2000&q=80');
     overflow: hidden;
 }}
 
+.crt {{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.03),
+        rgba(255,255,255,0.03) 1px,
+        transparent 2px,
+        transparent 4px
+    );
+    animation: flicker 0.15s infinite;
+}}
+
+@keyframes flicker {{
+    0% {{ opacity: 0.9; }}
+    50% {{ opacity: 1; }}
+    100% {{ opacity: 0.95; }}
+}}
+
+/* 🪟 DESKTOP */
 .desktop {{
     width: 100%;
     height: 100vh;
@@ -46,11 +69,10 @@ body {{
 .window {{
     position: absolute;
     width: 320px;
-    background: rgba(0,0,0,0.85);
+    background: rgba(0,0,0,0.88);
     border: 2px solid #3aa0ff;
-    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,150,255,0.4);
     color: white;
-    box-shadow: 0 0 15px rgba(0,150,255,0.4);
 }}
 
 .titlebar {{
@@ -60,7 +82,6 @@ body {{
     display: flex;
     justify-content: space-between;
     font-size: 12px;
-    font-weight: bold;
 }}
 
 .controls span {{
@@ -77,29 +98,33 @@ body {{
     padding: 6px;
     margin: 4px 0;
     border-radius: 6px;
-    text-align: center;
     cursor: pointer;
-}}
-
-.btn:hover {{
-    background: #3399ff;
 }}
 
 /* 📻 RADIO */
 #radio {{ top: 70px; left: 60px; }}
 /* 💬 CHAT */
-#chat {{ top: 110px; left: 420px; }}
-/* 📁 DESKTOP ICON */
-.icon {{
-    width: 80px;
-    color: white;
-    text-align: center;
-    margin: 20px;
+#chat {{ top: 120px; left: 420px; }}
+
+/* 🧠 START MENU */
+.startMenu {{
+    position: fixed;
+    bottom: 40px;
+    left: 0;
+    width: 200px;
+    background: rgba(0,0,0,0.95);
+    border: 2px solid #1e6bff;
+    display: none;
+    padding: 10px;
+}}
+
+.startItem {{
+    padding: 6px;
     cursor: pointer;
 }}
 
-.icon:hover {{
-    transform: scale(1.05);
+.startItem:hover {{
+    background: #1e6bff;
 }}
 
 /* 🟦 TASKBAR */
@@ -112,14 +137,13 @@ body {{
     display: flex;
     align-items: center;
     color: white;
-    padding: 0 10px;
 }}
 
-.start {{
+.startBtn {{
     background: #00aa00;
-    padding: 5px 12px;
+    padding: 6px 12px;
+    margin-left: 10px;
     cursor: pointer;
-    margin-right: 10px;
 }}
 
 .task {{
@@ -130,16 +154,21 @@ body {{
     cursor: pointer;
 }}
 
-audio {{
-    width: 100%;
-}}
-
+/* 💬 CHAT */
 .msg {{
     font-size: 11px;
     margin: 3px 0;
     background: rgba(255,255,255,0.05);
     padding: 4px;
-    border-radius: 4px;
+}}
+
+/* ✨ GLITCH EFFECT */
+.glitch {{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,0,255,0.08), transparent);
+    pointer-events: none;
 }}
 
 </style>
@@ -147,9 +176,10 @@ audio {{
 
 <body>
 
-<div class="desktop">
+<div class="crt"></div>
+<div class="glitch"></div>
 
-<!-- 📻 RADIO -->
+<!-- 🪟 RADIO -->
 <div class="window" id="radio">
 <div class="titlebar">
 <span>📻 RADIO</span>
@@ -174,21 +204,21 @@ audio {{
 </div>
 </div>
 <div class="content" id="chatBox">
-<div class="msg">SYSTEM: XP DESKTOP ONLINE</div>
-<div class="msg">Ashley: MSN vibes 💬</div>
+<div class="msg">SYSTEM: XP OS ONLINE</div>
+<div class="msg">Ashley: 2003 vibes 😭</div>
 </div>
 </div>
 
-<!-- 📁 ICON -->
-<div class="icon" onclick="openWin('chat')">
-📁<br>My Chat
-</div>
-
+<!-- 🟢 START MENU -->
+<div class="startMenu" id="startMenu">
+<div class="startItem" onclick="openWin('radio')">📻 Radio</div>
+<div class="startItem" onclick="openWin('chat')">💬 Chat</div>
+<div class="startItem" onclick="alert('My Computer opened')">💻 My Computer</div>
 </div>
 
 <!-- 🟦 TASKBAR -->
 <div class="taskbar">
-<div class="start" onclick="alert('START MENU')">START</div>
+<div class="startBtn" onclick="toggleStart()">START</div>
 <div class="task" onclick="openWin('radio')">Radio</div>
 <div class="task" onclick="openWin('chat')">Chat</div>
 </div>
@@ -197,13 +227,13 @@ audio {{
 
 const streams = {RADIO};
 
-/* 🎧 PLAY RADIO */
+/* 🎧 RADIO */
 function play(station) {{
     document.getElementById("audio").src = streams[station];
     document.getElementById("audio").play().catch(()=>{{}});
 }}
 
-/* 🪟 WINDOW SYSTEM */
+/* 🪟 WINDOW CONTROL */
 function openWin(id) {{
     document.getElementById(id).style.display = "block";
 }}
@@ -214,6 +244,12 @@ function closeWin(id) {{
 
 function minimize(id) {{
     document.getElementById(id).style.display = "none";
+}}
+
+/* 🧠 START MENU */
+function toggleStart() {{
+    const menu = document.getElementById("startMenu");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
 }}
 
 /* 🖱️ DRAG */
@@ -238,24 +274,27 @@ function drag(win) {{
 
 document.querySelectorAll(".window").forEach(drag);
 
-/* 💬 CHAT LIVE */
+/* 💬 LIVE CHAT */
 const msgs = [
-    "Mike: XP is alive again 💿",
-    "Ashley: MSN forever 💬",
-    "DJ: MTV mode ON",
+    "Mike: XP forever 💿",
+    "Ashley: MSN is back 💬",
+    "DJ: MTV vibes ON",
     "NYC: signal stable 🗽",
-    "Emma: Winamp vibes 🎧"
+    "Emma: Winamp skin era 🎧",
+    "SYSTEM: dial-up noise simulated"
 ];
 
 setInterval(()=> {{
     const box = document.getElementById("chatBox");
+
     const div = document.createElement("div");
     div.className = "msg";
     div.innerText = msgs[Math.floor(Math.random()*msgs.length)];
+
     box.appendChild(div);
 
     if(box.children.length > 10) box.removeChild(box.children[0]);
-}}, 1400);
+}}, 1300);
 
 </script>
 
@@ -268,7 +307,7 @@ setInterval(()=> {{
 
 @app.route("/alice", methods=["POST"])
 def alice():
-    return {"response": {"text": "NEXT LEVEL DESKTOP ACTIVE", "end_session": False}}
+    return {"response": {"text": "NEXT OS LEVEL ACTIVE", "end_session": False}}
 
 
 if __name__ == "__main__":
