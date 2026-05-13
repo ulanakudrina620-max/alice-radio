@@ -1,23 +1,17 @@
-from flask import Flask, jsonify
+from flask import Flask
 import os
 
 app = Flask(__name__)
 
-# 🎧 ULTRA-STABLE RADIO (fallback chains)
+# 🎧 СТАБИЛЬНЫЕ STREAMS (SomaFM + BBC)
 RADIO = {
-    "2001": [
-        "https://ice1.somafm.com/indiepop-128-mp3",
-        "https://ice2.somafm.com/indiepop-128-mp3"
-    ],
-    "2005": [
-        "https://ice1.somafm.com/poptron-128-mp3",
-        "https://ice1.somafm.com/beatblender-128-mp3",
-        "https://ice2.somafm.com/poptron-128-mp3"
-    ],
-    "2009": [
-        "https://ice1.somafm.com/punkrockers-128-mp3",
-        "https://ice1.somafm.com/groovesalad-128-mp3"
-    ]
+    "pop_2000s": "https://ice1.somafm.com/poptron-128-mp3",
+    "indie_rock": "https://ice1.somafm.com/indiepop-128-mp3",
+    "pop_punk": "https://ice1.somafm.com/punkrockers-128-mp3",
+    "dance": "https://ice1.somafm.com/beatblender-128-mp3",
+    "chill": "https://ice1.somafm.com/groovesalad-128-mp3",
+    "rnb": "https://ice1.somafm.com/smoothjazz-128-mp3",
+    "uk": "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_one"
 }
 
 
@@ -27,7 +21,7 @@ def home():
 <!DOCTYPE html>
 <html>
 <head>
-<title>MTV ULTIMATE TIME MACHINE</title>
+<title>MTV RADIO DESKTOP 2003</title>
 
 <style>
 
@@ -51,12 +45,12 @@ body {{
 
 .topbar {{
     height: 50px;
+    background: linear-gradient(to right, #0b2a6f, #1a5cff);
+    color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
-    background: linear-gradient(to right, #0b2a6f, #1a5cff);
-    color: white;
     font-weight: bold;
 }}
 
@@ -81,8 +75,8 @@ body {{
     margin-bottom: 10px;
     border-radius: 10px;
     cursor: pointer;
-    font-weight: bold;
     color: white;
+    font-weight: bold;
 }}
 
 .btn:hover {{
@@ -91,7 +85,7 @@ body {{
 
 .player {{
     flex: 1;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.75);
     border-radius: 14px;
     padding: 20px;
     display: flex;
@@ -103,7 +97,7 @@ body {{
     border: 1px solid #5ac8ff;
     border-radius: 10px;
     padding: 15px;
-    height: 130px;
+    height: 120px;
     color: #00ffcc;
 }}
 
@@ -122,7 +116,6 @@ audio {{
     margin-top: 10px;
 }}
 
-/* 💬 CHAT */
 .chat {{
     margin-top: 15px;
     background: rgba(10,10,25,0.95);
@@ -141,7 +134,6 @@ audio {{
     border-radius: 6px;
 }}
 
-/* 🟡 BREAKING NEWS */
 .ticker {{
     position: fixed;
     bottom: 0;
@@ -172,32 +164,36 @@ audio {{
 <div class="window">
 
 <div class="topbar">
-<div>📺 MTV ULTIMATE TIME MACHINE</div>
-<div>● STABLE MODE</div>
+<div>📺 MTV RADIO 2003 DESKTOP</div>
+<div>● ONLINE</div>
 </div>
 
 <div class="main">
 
 <div class="sidebar">
 
-<div class="btn" onclick="play('2001')">⏪ 2001 ERA</div>
-<div class="btn" onclick="play('2005')">💿 2005 ERA</div>
-<div class="btn" onclick="play('2009')">🚀 2009 ERA</div>
+<div class="btn" onclick="play('pop_2000s')">💿 POP 2000s</div>
+<div class="btn" onclick="play('indie_rock')">🎸 INDIE ROCK</div>
+<div class="btn" onclick="play('pop_punk')">🔥 POP PUNK</div>
+<div class="btn" onclick="play('dance')">🪩 DANCE</div>
+<div class="btn" onclick="play('chill')">🌙 CHILL</div>
+<div class="btn" onclick="play('rnb')">🎧 R&B</div>
+<div class="btn" onclick="play('uk')">🇬🇧 UK RADIO</div>
 
 </div>
 
 <div class="player">
 
 <div class="screen">
-<div class="nowplaying" id="nowplaying">SELECT ERA</div>
+<div class="nowplaying" id="nowplaying">SELECT STATION</div>
 <div class="status" id="status">READY</div>
 </div>
 
-<audio id="audio" controls autoplay></audio>
+<audio id="audio" controls></audio>
 
 <div class="chat" id="chat">
-<div class="msg">SYSTEM: ULTIMATE MODE ONLINE 🧠</div>
-<div class="msg">DJ: all streams stabilized ✔</div>
+<div class="msg">SYSTEM: MTV desktop loaded ✔</div>
+<div class="msg">DJ: choose a station 🎧</div>
 </div>
 
 </div>
@@ -206,7 +202,7 @@ audio {{
 
 <div class="ticker">
 <span>
-BREAKING: MTV system stabilized • 2000s revival confirmed • NYC radio active • Winamp era restored • Pop punk resurgence • Time machine fully operational • No signal loss detected •
+BREAKING: MTV 2000s revival • Windows XP aesthetic online • NYC radio active • Pop punk returns • CD era nostalgia • Winamp vibes detected •
 </span>
 </div>
 
@@ -220,59 +216,37 @@ function setStatus(text) {{
     document.getElementById("status").innerText = text;
 }}
 
-function play(year) {{
+function play(station) {{
 
     let audio = document.getElementById("audio");
-    let list = streams[year];
-    let i = 0;
 
     document.getElementById("nowplaying").innerText =
-    "NOW PLAYING: " + year.toUpperCase();
+    "NOW PLAYING: " + station.toUpperCase();
 
-    function tryStream() {{
+    setStatus("LOADING... ▶ CLICK PLAY IF NEEDED");
 
-        if(i >= list.length) {{
-            setStatus("❌ ALL STREAMS FAILED");
-            return;
-        }}
+    audio.src = streams[station];
+    audio.load();
 
-        setStatus("🔄 CONNECTING STREAM " + (i+1));
-
-        audio.src = list[i];
-
-        audio.play().then(() => {{
-            setStatus("✅ PLAYING");
-        }}).catch(() => {{
-            i++;
-            setStatus("⚠ SWITCHING STREAM...");
-            tryStream();
-        }});
-
-        let timeout = setTimeout(() => {{
-            if(audio.readyState < 2) {{
-                i++;
-                setStatus("⏳ BUFFER FAILED → SWITCHING");
-                tryStream();
-            }}
-        }}, 4000);
-
-        audio.onplaying = () => clearTimeout(timeout);
-    }}
-
-    tryStream();
+    audio.play()
+    .then(() => {{
+        setStatus("PLAYING ✔");
+    }})
+    .catch(() => {{
+        setStatus("CLICK ▶ TO START AUDIO");
+    }});
 }}
 
-// 💬 STABLE CHAT
+// 💬 CHAT
 const messages = [
-    "SYSTEM: connection stable 🗽",
-    "Ashley: this is pure nostalgia 😭",
-    "Mike: burning CD vibes 💿",
-    "DJ: welcome to MTV TIME MACHINE",
+    "DJ: welcome to MTV radio",
+    "Ashley: 2000s forever 😭",
+    "Mike: burning CD vibe 💿",
+    "SYSTEM: stable connection",
     "NYC: signal locked 📡"
 ];
 
-setInterval(() => {
-
+setInterval(() => {{
     let chat = document.getElementById("chat");
 
     let div = document.createElement("div");
@@ -287,7 +261,7 @@ setInterval(() => {
         chat.removeChild(chat.children[0]);
     }}
 
-}, 2000);
+}}, 2500);
 
 </script>
 
@@ -298,12 +272,7 @@ setInterval(() => {
 
 @app.route("/alice", methods=["POST"])
 def alice():
-    return jsonify({
-        "response": {
-            "text": "ULTIMATE MTV Time Machine online",
-            "end_session": False
-        }
-    })
+    return {"response": {"text": "MTV Radio online", "end_session": False}}
 
 
 if __name__ == "__main__":
