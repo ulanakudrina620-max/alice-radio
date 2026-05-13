@@ -12,13 +12,19 @@ RADIO = {
 
 current_station = "news"
 
+<<<<<<< HEAD
 
 @app.route("/", methods=["POST", "GET"])
 def alice_webhook():
+=======
+@app.route("/", methods=["GET", "POST"])
+def main():
+>>>>>>> 6a5736caee0a7ee39ec2a494764f0ffa6e69f0c4
     global current_station
 
     data = request.get_json(silent=True) or {}
 
+<<<<<<< HEAD
     command = ""
     if "request" in data:
         command = data["request"].get("command", "").lower()
@@ -27,21 +33,21 @@ def alice_webhook():
 
     if "новости" in command or "news" in command:
         current_station = "news"
+=======
+    text = "Скажи: новости, bloomberg или wnyc"
+
+    if "новости" in command:
+        current_station = "1010 wins"
+>>>>>>> 6a5736caee0a7ee39ec2a494764f0ffa6e69f0c4
         text = "Включаю новости Нью-Йорка"
 
-    elif "блумберг" in command or "bloomberg" in command:
+    elif "bloomberg" in command:
         current_station = "bloomberg"
-        text = "Включаю Bloomberg Radio"
+        text = "Включаю Bloomberg"
 
     elif "wnyc" in command:
         current_station = "wnyc"
         text = "Включаю WNYC"
-
-    elif "следующая" in command:
-        keys = list(RADIO.keys())
-        idx = (keys.index(current_station) + 1) % len(keys)
-        current_station = keys[idx]
-        text = f"Переключаю на {current_station}"
 
     return jsonify({
         "response": {
