@@ -3,164 +3,84 @@ import os
 
 app = Flask(__name__)
 
-# 🎧 FINAL STABLE RADIO SET
 RADIO = {
     "POP 2000s": "https://ice1.somafm.com/poptron-128-mp3",
     "INDIE XP": "https://ice1.somafm.com/indiepop-128-mp3",
     "PUNK XP": "https://ice1.somafm.com/punkrockers-128-mp3",
     "DANCE XP": "https://ice1.somafm.com/beatblender-128-mp3",
-    "CHILL XP": "https://ice1.somafm.com/groovesalad-128-mp3",
-    "RNB XP": "https://ice1.somafm.com/smoothjazz-128-mp3"
+    "CHILL XP": "https://ice1.somafm.com/groovesalad-128-mp3"
 }
 
 
 @app.route("/")
 def home():
-    return f"""
+
+    buttons = ""
+    for k in RADIO:
+        buttons += f"<div class='btn' onclick=\"play('{k}')\">{k}</div>"
+
+    html = f"""
 <!DOCTYPE html>
 <html>
 <head>
-<title>FINAL LEVEL MTV XP RADIO</title>
+<title>MTV XP RADIO + CHAT</title>
 
 <style>
 
 body {{
     margin: 0;
-    font-family: Tahoma, Arial;
-    background:
-    linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.95)),
+    font-family: Tahoma;
+    background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.95)),
     url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=2000&q=80');
-    background-size: cover;
     height: 100vh;
     overflow: hidden;
 }}
 
-/* 🪟 DESKTOP */
-.window {{
+.desktop {{
     display: flex;
-    flex-direction: column;
     height: 100vh;
 }}
 
-.topbar {{
-    height: 50px;
-    background: linear-gradient(to right, #0b2a6f, #1a5cff);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    font-weight: bold;
-}}
-
-.main {{
-    flex: 1;
-    display: flex;
-    padding: 20px;
-    gap: 20px;
-}}
-
-/* 📁 SIDEBAR */
 .sidebar {{
-    width: 260px;
-    background: rgba(0,0,0,0.6);
-    border-radius: 12px;
-    padding: 15px;
+    width: 240px;
+    background: rgba(0,0,0,0.65);
+    padding: 10px;
 }}
 
 .btn {{
-    background: linear-gradient(to bottom, #4fb3ff, #0050aa);
-    border: 1px solid #8bd1ff;
-    padding: 10px;
-    margin-bottom: 8px;
-    border-radius: 10px;
-    cursor: pointer;
+    background: #1e6bff;
     color: white;
-    font-weight: bold;
+    padding: 10px;
+    margin: 6px 0;
+    cursor: pointer;
+    border-radius: 6px;
     text-align: center;
 }}
 
-.btn:hover {{
-    transform: scale(1.04);
-}}
-
-/* 📺 PLAYER */
 .player {{
     flex: 1;
-    background: rgba(0,0,0,0.78);
-    border-radius: 14px;
     padding: 20px;
-    display: flex;
-    flex-direction: column;
-}}
-
-.screen {{
-    background: black;
-    border: 1px solid #66d9ff;
-    border-radius: 10px;
-    padding: 15px;
-    color: #00ffcc;
-}}
-
-.now {{
-    font-size: 14px;
-}}
-
-.status {{
-    font-size: 12px;
-    opacity: 0.7;
-    margin-top: 5px;
+    color: white;
 }}
 
 audio {{
     width: 100%;
-    margin-top: 10px;
 }}
 
-/* 🎚 EQ */
-.eq {{
-    display: flex;
-    gap: 3px;
-    margin-top: 10px;
-    height: 25px;
-}}
-
-.bar {{
-    width: 4px;
-    background: lime;
-    animation: eq 0.5s infinite ease-in-out;
-}}
-
-.bar:nth-child(2) {{ animation-delay: 0.1s; }}
-.bar:nth-child(3) {{ animation-delay: 0.2s; }}
-.bar:nth-child(4) {{ animation-delay: 0.3s; }}
-
-@keyframes eq {{
-    0% {{ height: 5px; }}
-    50% {{ height: 25px; }}
-    100% {{ height: 8px; }}
-}}
-
-/* 💬 CHAT */
 .chat {{
-    margin-top: 15px;
-    background: rgba(10,10,25,0.9);
-    border-radius: 10px;
+    margin-top: 10px;
+    background: rgba(0,0,0,0.75);
     padding: 10px;
-    height: 160px;
+    height: 180px;
     overflow: hidden;
-    color: white;
     font-size: 12px;
 }}
 
 .msg {{
-    margin: 5px 0;
-    padding: 4px 6px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 6px;
+    margin: 4px 0;
+    color: white;
 }}
 
-/* 🟡 TICKER */
 .ticker {{
     position: fixed;
     bottom: 0;
@@ -188,46 +108,22 @@ audio {{
 
 <body>
 
-<div class="window">
-
-<div class="topbar">
-<div>📺 FINAL LEVEL MTV XP RADIO</div>
-<div>● STABLE SYSTEM</div>
-</div>
-
-<div class="main">
+<div class="desktop">
 
 <div class="sidebar">
-
-<div class="btn" onclick="play('POP 2000s')">POP 2000s</div>
-<div class="btn" onclick="play('INDIE XP')">INDIE XP</div>
-<div class="btn" onclick="play('PUNK XP')">PUNK XP</div>
-<div class="btn" onclick="play('DANCE XP')">DANCE XP</div>
-<div class="btn" onclick="play('CHILL XP')">CHILL XP</div>
-<div class="btn" onclick="play('RNB XP')">RNB XP</div>
-
+{buttons}
 </div>
 
 <div class="player">
 
-<div class="screen">
-<div class="now" id="now">SELECT STATION</div>
-<div class="status" id="status">READY</div>
-
-<div class="eq">
-<div class="bar"></div>
-<div class="bar"></div>
-<div class="bar"></div>
-<div class="bar"></div>
-</div>
-
-</div>
+<h2 id="now">SELECT STATION</h2>
 
 <audio id="audio" controls></audio>
 
 <div class="chat" id="chat">
-<div class="msg">SYSTEM: FINAL LEVEL ONLINE ✔</div>
-<div class="msg">DJ: welcome to MTV XP radio</div>
+<div class="msg">SYSTEM: MSN Messenger connected 💬</div>
+<div class="msg">Ashley: 2000s vibes are back 😭</div>
+<div class="msg">Mike: burning CD right now 💿</div>
 </div>
 
 </div>
@@ -236,53 +132,44 @@ audio {{
 
 <div class="ticker">
 <span>
-FINAL LEVEL ACTIVE • WINAMP ERA SIMULATION • NYC RADIO SIGNAL STABLE • 2000s CULTURE RESTORED • MTV DESKTOP RUNNING •
+BREAKING NEWS: MTV returns to peak 2003 • MySpace profiles trending again • Winamp skins downloaded worldwide • Limewire activity spikes • iPod Nano nostalgia wave • MSN Messenger servers simulated online • Pop-punk revival in NYC • Avril Lavigne dominates charts again • CD burning software downloads increase • Napster-era memories resurface •
 </span>
-</div>
-
 </div>
 
 <script>
 
 const streams = {RADIO};
 
+/* 🎧 PLAY */
 function play(station) {{
-
-    let audio = document.getElementById("audio");
-
-    document.getElementById("now").innerText =
-    "NOW PLAYING: " + station;
-
-    document.getElementById("status").innerText = "CONNECTING...";
+    const audio = document.getElementById("audio");
+    document.getElementById("now").innerText = "NOW PLAYING: " + station;
 
     audio.src = streams[station];
-    audio.load();
-
-    audio.play()
-    .then(() => {{
-        document.getElementById("status").innerText = "PLAYING ✔";
-    }})
-    .catch(() => {{
-        document.getElementById("status").innerText = "CLICK PLAY ▶";
-    }});
+    audio.play().catch(()=>{{}});
 }}
 
-const msgs = [
-    "DJ: MTV XP is alive",
-    "Ashley: nostalgia overload 😭",
-    "Mike: Winamp forever 💿",
-    "SYSTEM: stable connection",
-    "NYC: signal locked 📡"
+/* 💬 MSN-STYLE CHAT VARIETY */
+const chatLines = [
+    "Ashley: OMG this song was on MySpace 😭",
+    "Mike: I miss Winamp skins lol 💿",
+    "DJ: MTV countdown vibes are back 🎧",
+    "SYSTEM: user connected via dial-up simulation",
+    "Emma: burning CDs was a lifestyle",
+    "Jake: this feels like Limewire era 💀",
+    "NYC: signal stable 🗽",
+    "Tom: iPod shuffle energy detected",
+    "Lisa: MSN status = BRB listening to pop punk",
+    "Alex: 2000s internet was WILD"
 ];
 
 setInterval(() => {{
+    const chat = document.getElementById("chat");
 
-    let chat = document.getElementById("chat");
-
-    let div = document.createElement("div");
+    const div = document.createElement("div");
     div.className = "msg";
 
-    div.innerText = msgs[Math.floor(Math.random()*msgs.length)];
+    div.innerText = chatLines[Math.floor(Math.random()*chatLines.length)];
 
     chat.appendChild(div);
 
@@ -290,7 +177,7 @@ setInterval(() => {{
         chat.removeChild(chat.children[0]);
     }}
 
-}}, 2300);
+}}, 1800);
 
 </script>
 
@@ -298,10 +185,12 @@ setInterval(() => {{
 </html>
 """
 
+    return html
+
 
 @app.route("/alice", methods=["POST"])
 def alice():
-    return {"response": {"text": "FINAL LEVEL UI ACTIVE", "end_session": False}}
+    return {"response": {"text": "MTV XP CHAT MODE ACTIVE", "end_session": False}}
 
 
 if __name__ == "__main__":
