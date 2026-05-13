@@ -6,9 +6,9 @@ app = Flask(__name__)
 RADIO = {
     "late night indie": "https://ice1.somafm.com/indiepop-128-mp3",
     "emo memories": "https://ice1.somafm.com/punkrockers-128-mp3",
-    "soft 2000s pop": "https://ice1.somafm.com/poptron-128-mp3",
-    "dreamy beats": "https://ice1.somafm.com/beatblender-128-mp3",
-    "sleepy chill": "https://ice1.somafm.com/groovesalad-128-mp3"
+    "soft pop 2000s": "https://ice1.somafm.com/poptron-128-mp3",
+    "dream beats": "https://ice1.somafm.com/beatblender-128-mp3",
+    "sleepy ambient": "https://ice1.somafm.com/groovesalad-128-mp3"
 }
 
 
@@ -23,11 +23,10 @@ def home():
 <!DOCTYPE html>
 <html>
 <head>
-<title>deep tumblr core</title>
+<title>tumblr core 2012</title>
 
 <style>
 
-/* 🌙 BASE NIGHT AESTHETIC */
 body {{
     margin: 0;
     font-family: Helvetica, Arial;
@@ -39,7 +38,6 @@ body {{
     overflow: hidden;
 }}
 
-/* 🌫 grain */
 .grain {{
     position: fixed;
     width: 100%;
@@ -49,7 +47,6 @@ body {{
     opacity: 0.06;
 }}
 
-/* 🧠 layout */
 .container {{
     display: flex;
     gap: 20px;
@@ -57,20 +54,12 @@ body {{
     height: 100vh;
 }}
 
-/* 🎧 radio */
 .panel {{
-    width: 360px;
+    width: 320px;
     background: rgba(25,25,30,0.75);
     backdrop-filter: blur(10px);
     border-radius: 14px;
     padding: 15px;
-    box-shadow: 0 0 40px rgba(0,0,0,0.6);
-}}
-
-.title {{
-    font-size: 16px;
-    opacity: 0.85;
-    margin-bottom: 10px;
 }}
 
 .btn {{
@@ -79,20 +68,37 @@ body {{
     margin: 5px 0;
     border-radius: 10px;
     cursor: pointer;
-    transition: 0.2s;
-}}
-
-.btn:hover {{
-    background: rgba(255,255,255,0.12);
 }}
 
 audio {{
     width: 100%;
     margin-top: 10px;
-    filter: grayscale(1);
 }}
 
-/* 💌 tumblr feed */
+/* 🧾 BLOG PROFILES */
+.profile {{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.05);
+    padding: 10px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}}
+
+.avatar {{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #888;
+}}
+
+.name {{
+    font-weight: bold;
+    font-size: 13px;
+}}
+
+/* 🎞 POSTS */
 .feed {{
     flex: 1;
     overflow-y: auto;
@@ -101,35 +107,31 @@ audio {{
 
 .post {{
     background: rgba(25,25,30,0.75);
-    margin-bottom: 15px;
-    padding: 15px;
+    padding: 12px;
     border-radius: 14px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 25px rgba(0,0,0,0.5);
-    animation: fade 0.4s ease-in;
+    margin-bottom: 12px;
 }}
 
-@keyframes fade {{
-    from {{ opacity: 0; transform: translateY(10px); }}
-    to {{ opacity: 1; transform: translateY(0); }}
+.gif {{
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 8px;
 }}
 
-.tag {{
-    color: #8aa0ff;
+.actions {{
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
     font-size: 12px;
-    margin-top: 6px;
     opacity: 0.8;
 }}
 
-h1 {{
-    font-size: 18px;
-    margin: 0 0 8px 0;
-    opacity: 0.9;
+.action {{
+    cursor: pointer;
 }}
 
-p {{
-    margin: 0;
-    opacity: 0.85;
+.action:hover {{
+    opacity: 1;
 }}
 
 </style>
@@ -143,37 +145,62 @@ p {{
 
 <!-- 🎧 RADIO -->
 <div class="panel">
-<div class="title">🌙 late night radio</div>
+<h3>🌙 radio</h3>
 
 {stations}
 
 <audio id="audio" controls></audio>
+</div>
 
-<p style="opacity:0.5;font-size:12px;margin-top:10px;">
-“music for people who think too much at night”
-</p>
+<!-- 🧾 BLOG LIST -->
+<div class="panel">
+<h3>👤 blogs</h3>
+
+<div class="profile">
+<div class="avatar"></div>
+<div class="name">indie_night</div>
+</div>
+
+<div class="profile">
+<div class="avatar"></div>
+<div class="name">emo_memories</div>
+</div>
+
+<div class="profile">
+<div class="avatar"></div>
+<div class="name">soft_aesthetic</div>
+</div>
+
+<div class="profile">
+<div class="avatar"></div>
+<div class="name">nyc_late_night</div>
+</div>
 
 </div>
 
-<!-- 💌 FEED -->
+<!-- 🎞 FEED -->
 <div class="feed">
 
 <div class="post">
-<h1>i miss something i can’t name</h1>
-<p>it’s not a person. not a place. just a feeling i had once at 2am.</p>
-<div class="tag">#tumblr #nostalgia #2012</div>
+<h3>late night thoughts</h3>
+<p>some songs feel like memories you never had.</p>
+<img class="gif" src="https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif">
+
+<div class="actions">
+<div class="action" onclick="like(this)">❤️ like <span>0</span></div>
+<div class="action" onclick="reblog(this)">🔁 reblog</div>
+</div>
 </div>
 
 <div class="post">
-<h1>currently listening</h1>
-<p id="now">select a station to set your mood</p>
-<div class="tag">#nowplaying</div>
-</div>
+<h3>city at 2am</h3>
+<p>everything is quieter when you’re thinking too much.</p>
+<img class="gif" src="https://media.giphy.com/media/l0HlQ7LRalQqdWfao/giphy.gif">
 
-<div class="post">
-<h1>late internet thoughts</h1>
-<p>we used to express ourselves more when nobody was watching.</p>
-<div class="tag">#deepcore #internet</div>
+<div class="actions">
+<div class="action" onclick="like(this)">❤️ like <span>0</span></div>
+<div class="action" onclick="reblog(this)">🔁 reblog</div>
+</div>
 </div>
 
 </div>
@@ -188,37 +215,20 @@ const streams = {RADIO};
 function play(station) {{
     document.getElementById("audio").src = streams[station];
     document.getElementById("audio").play().catch(()=>{{}});
-    document.getElementById("now").innerText = station;
 }}
 
-/* 💌 living tumblr feed */
-const lines = [
-    "you are not where you used to be.",
-    "this song feels like memory.",
-    "some nights are heavier than others.",
-    "you reblogged a feeling you can’t explain.",
-    "everything is quieter at 2:37am.",
-    "you are online, but not really here."
-];
+/* ❤️ like system */
+function like(el) {{
+    let span = el.querySelector("span");
+    span.innerText = parseInt(span.innerText) + 1;
+}}
 
-setInterval(()=>{{
-    const feed = document.querySelector(".feed");
-
-    const post = document.createElement("div");
-    post.className = "post";
-
-    post.innerHTML = `
-        <h1>thought fragment</h1>
-        <p>${{lines[Math.floor(Math.random()*lines.length)]}}</p>
-        <div class="tag">#deep tumblr core</div>
-    `;
-
-    feed.appendChild(post);
-
-    if(feed.children.length > 7) {{
-        feed.removeChild(feed.children[0]);
-    }}
-}}, 3000);
+/* 🔁 reblog system */
+function reblog(el) {{
+    let post = el.closest(".post");
+    let clone = post.cloneNode(true);
+    document.querySelector(".feed").prepend(clone);
+}}
 
 </script>
 
@@ -231,7 +241,7 @@ setInterval(()=>{{
 
 @app.route("/alice", methods=["POST"])
 def alice():
-    return {"response": {"text": "deep tumblr core active", "end_session": False}}
+    return {"response": {"text": "tumblr core system active", "end_session": False}}
 
 
 if __name__ == "__main__":
