@@ -4,11 +4,11 @@ import os
 app = Flask(__name__)
 
 RADIO = {
-    "MTV POP 2003": "https://ice1.somafm.com/poptron-128-mp3",
-    "MYSPACE INDIE": "https://ice1.somafm.com/indiepop-128-mp3",
-    "POP PUNK ERA": "https://ice1.somafm.com/punkrockers-128-mp3",
-    "DANCE 2005": "https://ice1.somafm.com/beatblender-128-mp3",
-    "CHILL NIGHT": "https://ice1.somafm.com/groovesalad-128-mp3"
+    "indie dreams": "https://ice1.somafm.com/indiepop-128-mp3",
+    "late night chill": "https://ice1.somafm.com/groovesalad-128-mp3",
+    "soft pop 2000s": "https://ice1.somafm.com/poptron-128-mp3",
+    "emo memories": "https://ice1.somafm.com/punkrockers-128-mp3",
+    "dreamy beats": "https://ice1.somafm.com/beatblender-128-mp3"
 }
 
 
@@ -17,158 +17,106 @@ def home():
 
     stations = ""
     for k in RADIO:
-        stations += f"<div class='btn' onclick=\"play('{k}')\">📻 {k}</div>"
+        stations += f"<div class='btn' onclick=\"play('{k}')\">{k}</div>"
 
     html = f"""
 <!DOCTYPE html>
 <html>
 <head>
-<title>XP NEXT OS LEVEL</title>
+<title>tumblr 2012 radio</title>
 
 <style>
 
-/* 🧠 CRT / OLD MONITOR EFFECT */
+/* 🌙 TUMBLR NIGHT AESTHETIC */
 body {{
     margin: 0;
-    font-family: Tahoma;
+    font-family: Helvetica, Arial;
     background:
     linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.95)),
-    url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=2000&q=80');
+    url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=2000&q=80');
+    background-size: cover;
+    color: #e6e6e6;
     overflow: hidden;
 }}
 
-.crt {{
+/* 🌫 grain overlay */
+.grain {{
     position: fixed;
     width: 100%;
     height: 100%;
     pointer-events: none;
-    background: repeating-linear-gradient(
-        0deg,
-        rgba(255,255,255,0.03),
-        rgba(255,255,255,0.03) 1px,
-        transparent 2px,
-        transparent 4px
-    );
-    animation: flicker 0.15s infinite;
+    background-image: url("https://www.transparenttextures.com/patterns/noise.png");
+    opacity: 0.05;
 }}
 
-@keyframes flicker {{
-    0% {{ opacity: 0.9; }}
-    50% {{ opacity: 1; }}
-    100% {{ opacity: 0.95; }}
-}}
-
-/* 🪟 DESKTOP */
-.desktop {{
-    width: 100%;
-    height: 100vh;
-    position: relative;
-}}
-
-/* 🪟 WINDOW SYSTEM */
-.window {{
-    position: absolute;
-    width: 320px;
-    background: rgba(0,0,0,0.88);
-    border: 2px solid #3aa0ff;
-    box-shadow: 0 0 20px rgba(0,150,255,0.4);
-    color: white;
-}}
-
-.titlebar {{
-    background: linear-gradient(to right, #0b2a6f, #1e6bff);
-    padding: 5px;
-    cursor: move;
+/* 📱 layout */
+.container {{
     display: flex;
-    justify-content: space-between;
-    font-size: 12px;
+    height: 100vh;
+    padding: 20px;
+    gap: 20px;
 }}
 
-.controls span {{
-    margin-left: 8px;
-    cursor: pointer;
+/* 🎧 player card */
+.card {{
+    width: 400px;
+    background: rgba(20,20,25,0.75);
+    border-radius: 12px;
+    padding: 15px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
 }}
 
-.content {{
-    padding: 10px;
+.title {{
+    font-size: 18px;
+    margin-bottom: 10px;
+    opacity: 0.9;
 }}
 
 .btn {{
-    background: #1e6bff;
-    padding: 6px;
-    margin: 4px 0;
-    border-radius: 6px;
+    background: rgba(255,255,255,0.08);
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 8px;
     cursor: pointer;
+    transition: 0.2s;
 }}
 
-/* 📻 RADIO */
-#radio {{ top: 70px; left: 60px; }}
-/* 💬 CHAT */
-#chat {{ top: 120px; left: 420px; }}
-
-/* 🧠 START MENU */
-.startMenu {{
-    position: fixed;
-    bottom: 40px;
-    left: 0;
-    width: 200px;
-    background: rgba(0,0,0,0.95);
-    border: 2px solid #1e6bff;
-    display: none;
-    padding: 10px;
+.btn:hover {{
+    background: rgba(255,255,255,0.15);
 }}
 
-.startItem {{
-    padding: 6px;
-    cursor: pointer;
-}}
-
-.startItem:hover {{
-    background: #1e6bff;
-}}
-
-/* 🟦 TASKBAR */
-.taskbar {{
-    position: fixed;
-    bottom: 0;
+/* 🎧 audio */
+audio {{
     width: 100%;
-    height: 40px;
-    background: linear-gradient(to right, #0b2a6f, #1e6bff);
-    display: flex;
-    align-items: center;
-    color: white;
+    margin-top: 10px;
+    filter: grayscale(1);
 }}
 
-.startBtn {{
-    background: #00aa00;
-    padding: 6px 12px;
-    margin-left: 10px;
-    cursor: pointer;
+/* 💬 tumblr feed */
+.feed {{
+    flex: 1;
+    overflow: hidden;
 }}
 
-.task {{
-    margin-left: 10px;
-    background: rgba(255,255,255,0.2);
-    padding: 3px 8px;
-    border-radius: 4px;
-    cursor: pointer;
+.post {{
+    background: rgba(20,20,25,0.75);
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
 }}
 
-/* 💬 CHAT */
-.msg {{
-    font-size: 11px;
-    margin: 3px 0;
-    background: rgba(255,255,255,0.05);
-    padding: 4px;
+.tag {{
+    color: #8aa0ff;
+    font-size: 12px;
+    margin-top: 5px;
 }}
 
-/* ✨ GLITCH EFFECT */
-.glitch {{
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle, rgba(255,0,255,0.08), transparent);
-    pointer-events: none;
+/* 🖤 subtle glow */
+h1 {{
+    font-size: 22px;
+    opacity: 0.9;
 }}
 
 </style>
@@ -176,125 +124,86 @@ body {{
 
 <body>
 
-<div class="crt"></div>
-<div class="glitch"></div>
+<div class="grain"></div>
 
-<!-- 🪟 RADIO -->
-<div class="window" id="radio">
-<div class="titlebar">
-<span>📻 RADIO</span>
-<div class="controls">
-<span onclick="minimize('radio')">_</span>
-<span onclick="closeWin('radio')">X</span>
-</div>
-</div>
-<div class="content">
+<div class="container">
+
+<!-- 🎧 MUSIC -->
+<div class="card">
+<div class="title">🌙 indie radio</div>
+
 {stations}
+
 <audio id="audio" controls></audio>
-</div>
+
+<p style="opacity:0.6;font-size:12px;margin-top:10px;">
+“it’s 2am and this song feels like a memory”
+</p>
+
 </div>
 
-<!-- 💬 CHAT -->
-<div class="window" id="chat">
-<div class="titlebar">
-<span>💬 MSN CHAT</span>
-<div class="controls">
-<span onclick="minimize('chat')">_</span>
-<span onclick="closeWin('chat')">X</span>
-</div>
-</div>
-<div class="content" id="chatBox">
-<div class="msg">SYSTEM: XP OS ONLINE</div>
-<div class="msg">Ashley: 2003 vibes 😭</div>
-</div>
+<!-- 🖤 TUMBLR FEED -->
+<div class="feed">
+
+<div class="post">
+<h1>late night thoughts</h1>
+<p>music hits different when the world is quiet.</p>
+<div class="tag">#indie #night #2000s</div>
 </div>
 
-<!-- 🟢 START MENU -->
-<div class="startMenu" id="startMenu">
-<div class="startItem" onclick="openWin('radio')">📻 Radio</div>
-<div class="startItem" onclick="openWin('chat')">💬 Chat</div>
-<div class="startItem" onclick="alert('My Computer opened')">💻 My Computer</div>
+<div class="post">
+<h1>nostalgia wave</h1>
+<p>burning CDs, scrolling old blogs, feeling everything again.</p>
+<div class="tag">#tumblr #emo #memories</div>
 </div>
 
-<!-- 🟦 TASKBAR -->
-<div class="taskbar">
-<div class="startBtn" onclick="toggleStart()">START</div>
-<div class="task" onclick="openWin('radio')">Radio</div>
-<div class="task" onclick="openWin('chat')">Chat</div>
+<div class="post">
+<h1>currently playing</h1>
+<p id="now">select a station…</p>
+<div class="tag">#nowplaying</div>
+</div>
+
+</div>
+
 </div>
 
 <script>
 
 const streams = {RADIO};
 
-/* 🎧 RADIO */
+/* 🎧 play music */
 function play(station) {{
     document.getElementById("audio").src = streams[station];
     document.getElementById("audio").play().catch(()=>{{}});
+    document.getElementById("now").innerText = station;
 }}
 
-/* 🪟 WINDOW CONTROL */
-function openWin(id) {{
-    document.getElementById(id).style.display = "block";
-}}
-
-function closeWin(id) {{
-    document.getElementById(id).style.display = "none";
-}}
-
-function minimize(id) {{
-    document.getElementById(id).style.display = "none";
-}}
-
-/* 🧠 START MENU */
-function toggleStart() {{
-    const menu = document.getElementById("startMenu");
-    menu.style.display = menu.style.display === "block" ? "none" : "block";
-}}
-
-/* 🖱️ DRAG */
-function drag(win) {{
-    let isDown = false, ox, oy;
-
-    win.querySelector(".titlebar").addEventListener("mousedown", (e)=>{{
-        isDown = true;
-        ox = e.clientX - win.offsetLeft;
-        oy = e.clientY - win.offsetTop;
-        win.style.zIndex = 999;
-    }});
-
-    document.addEventListener("mousemove", (e)=>{{
-        if(!isDown) return;
-        win.style.left = (e.clientX - ox) + "px";
-        win.style.top = (e.clientY - oy) + "px";
-    }});
-
-    document.addEventListener("mouseup", ()=> isDown=false);
-}}
-
-document.querySelectorAll(".window").forEach(drag);
-
-/* 💬 LIVE CHAT */
-const msgs = [
-    "Mike: XP forever 💿",
-    "Ashley: MSN is back 💬",
-    "DJ: MTV vibes ON",
-    "NYC: signal stable 🗽",
-    "Emma: Winamp skin era 🎧",
-    "SYSTEM: dial-up noise simulated"
+/* 💬 tumblr-style “life feed” */
+const lines = [
+    "someone liked your post.",
+    "you are listening to memories.",
+    "it’s raining somewhere in your mind.",
+    "this song feels like 2012.",
+    "you reblogged a feeling.",
+    "late night internet is different."
 ];
 
-setInterval(()=> {{
-    const box = document.getElementById("chatBox");
+setInterval(()=>{{
+    const feed = document.querySelector(".feed");
 
-    const div = document.createElement("div");
-    div.className = "msg";
-    div.innerText = msgs[Math.floor(Math.random()*msgs.length)];
+    const post = document.createElement("div");
+    post.className = "post";
+    post.innerHTML = `
+        <p>${{lines[Math.floor(Math.random()*lines.length)]}}</p>
+        <div class="tag">#tumblr #late night</div>
+    `;
 
-    box.appendChild(div);
+    feed.appendChild(post);
 
-    if(box.children.length > 10) box.removeChild(box.children[0]);
-}}, 1300);
+    if(feed.children.length > 6) {{
+        feed.removeChild(feed.children[0]);
+    }}
+}}, 2500);
 
 </script>
 
@@ -307,7 +216,7 @@ setInterval(()=> {{
 
 @app.route("/alice", methods=["POST"])
 def alice():
-    return {"response": {"text": "NEXT OS LEVEL ACTIVE", "end_session": False}}
+    return {"response": {"text": "tumblr indie radio active", "end_session": False}}
 
 
 if __name__ == "__main__":
