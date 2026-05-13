@@ -9,7 +9,6 @@ RADIO = {
     "wnyc": "https://fm939.wnyc.org/wnycfm"
 }
 
-
 @app.route("/")
 def home():
     return f"""
@@ -24,20 +23,17 @@ body {{
     font-family: Arial;
     text-align: center;
 }}
-
 button {{
     padding: 15px;
     margin: 10px;
     font-size: 18px;
     cursor: pointer;
 }}
-
 .player {{
     margin-top: 30px;
 }}
 </style>
 </head>
-
 <body>
 
 <h1>🎧 New York Radio</h1>
@@ -57,7 +53,6 @@ function play(station) {{
         bloomberg: "{RADIO['bloomberg']}",
         wnyc: "{RADIO['wnyc']}"
     }};
-
     let audio = document.getElementById("audio");
     audio.src = streams[station];
     audio.play();
@@ -68,7 +63,6 @@ function play(station) {{
 </html>
 """
 
-
 @app.route("/alice", methods=["POST"])
 def alice():
     return jsonify({
@@ -77,7 +71,6 @@ def alice():
             "end_session": False
         }
     })
-
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
