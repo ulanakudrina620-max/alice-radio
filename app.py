@@ -4,11 +4,11 @@ import os
 app = Flask(__name__)
 
 RADIO = {
-    "indie dreams": "https://ice1.somafm.com/indiepop-128-mp3",
-    "late night chill": "https://ice1.somafm.com/groovesalad-128-mp3",
-    "soft pop 2000s": "https://ice1.somafm.com/poptron-128-mp3",
+    "late night indie": "https://ice1.somafm.com/indiepop-128-mp3",
     "emo memories": "https://ice1.somafm.com/punkrockers-128-mp3",
-    "dreamy beats": "https://ice1.somafm.com/beatblender-128-mp3"
+    "soft 2000s pop": "https://ice1.somafm.com/poptron-128-mp3",
+    "dreamy beats": "https://ice1.somafm.com/beatblender-128-mp3",
+    "sleepy chill": "https://ice1.somafm.com/groovesalad-128-mp3"
 }
 
 
@@ -23,100 +23,113 @@ def home():
 <!DOCTYPE html>
 <html>
 <head>
-<title>tumblr 2012 radio</title>
+<title>deep tumblr core</title>
 
 <style>
 
-/* 🌙 TUMBLR NIGHT AESTHETIC */
+/* 🌙 BASE NIGHT AESTHETIC */
 body {{
     margin: 0;
     font-family: Helvetica, Arial;
     background:
-    linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.95)),
+    linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.98)),
     url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=2000&q=80');
     background-size: cover;
-    color: #e6e6e6;
+    color: #eaeaea;
     overflow: hidden;
 }}
 
-/* 🌫 grain overlay */
+/* 🌫 grain */
 .grain {{
     position: fixed;
     width: 100%;
     height: 100%;
     pointer-events: none;
     background-image: url("https://www.transparenttextures.com/patterns/noise.png");
-    opacity: 0.05;
+    opacity: 0.06;
 }}
 
-/* 📱 layout */
+/* 🧠 layout */
 .container {{
     display: flex;
-    height: 100vh;
-    padding: 20px;
     gap: 20px;
+    padding: 20px;
+    height: 100vh;
 }}
 
-/* 🎧 player card */
-.card {{
-    width: 400px;
-    background: rgba(20,20,25,0.75);
-    border-radius: 12px;
+/* 🎧 radio */
+.panel {{
+    width: 360px;
+    background: rgba(25,25,30,0.75);
+    backdrop-filter: blur(10px);
+    border-radius: 14px;
     padding: 15px;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
 }}
 
 .title {{
-    font-size: 18px;
+    font-size: 16px;
+    opacity: 0.85;
     margin-bottom: 10px;
-    opacity: 0.9;
 }}
 
 .btn {{
-    background: rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.06);
     padding: 8px;
     margin: 5px 0;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     transition: 0.2s;
 }}
 
 .btn:hover {{
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.12);
 }}
 
-/* 🎧 audio */
 audio {{
     width: 100%;
     margin-top: 10px;
     filter: grayscale(1);
 }}
 
-/* 💬 tumblr feed */
+/* 💌 tumblr feed */
 .feed {{
     flex: 1;
-    overflow: hidden;
+    overflow-y: auto;
+    padding-right: 10px;
 }}
 
 .post {{
-    background: rgba(20,20,25,0.75);
+    background: rgba(25,25,30,0.75);
     margin-bottom: 15px;
     padding: 15px;
-    border-radius: 12px;
-    backdrop-filter: blur(8px);
+    border-radius: 14px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 25px rgba(0,0,0,0.5);
+    animation: fade 0.4s ease-in;
+}}
+
+@keyframes fade {{
+    from {{ opacity: 0; transform: translateY(10px); }}
+    to {{ opacity: 1; transform: translateY(0); }}
 }}
 
 .tag {{
     color: #8aa0ff;
     font-size: 12px;
-    margin-top: 5px;
+    margin-top: 6px;
+    opacity: 0.8;
 }}
 
-/* 🖤 subtle glow */
 h1 {{
-    font-size: 22px;
+    font-size: 18px;
+    margin: 0 0 8px 0;
     opacity: 0.9;
+}}
+
+p {{
+    margin: 0;
+    opacity: 0.85;
 }}
 
 </style>
@@ -128,39 +141,39 @@ h1 {{
 
 <div class="container">
 
-<!-- 🎧 MUSIC -->
-<div class="card">
-<div class="title">🌙 indie radio</div>
+<!-- 🎧 RADIO -->
+<div class="panel">
+<div class="title">🌙 late night radio</div>
 
 {stations}
 
 <audio id="audio" controls></audio>
 
-<p style="opacity:0.6;font-size:12px;margin-top:10px;">
-“it’s 2am and this song feels like a memory”
+<p style="opacity:0.5;font-size:12px;margin-top:10px;">
+“music for people who think too much at night”
 </p>
 
 </div>
 
-<!-- 🖤 TUMBLR FEED -->
+<!-- 💌 FEED -->
 <div class="feed">
 
 <div class="post">
-<h1>late night thoughts</h1>
-<p>music hits different when the world is quiet.</p>
-<div class="tag">#indie #night #2000s</div>
+<h1>i miss something i can’t name</h1>
+<p>it’s not a person. not a place. just a feeling i had once at 2am.</p>
+<div class="tag">#tumblr #nostalgia #2012</div>
 </div>
 
 <div class="post">
-<h1>nostalgia wave</h1>
-<p>burning CDs, scrolling old blogs, feeling everything again.</p>
-<div class="tag">#tumblr #emo #memories</div>
-</div>
-
-<div class="post">
-<h1>currently playing</h1>
-<p id="now">select a station…</p>
+<h1>currently listening</h1>
+<p id="now">select a station to set your mood</p>
 <div class="tag">#nowplaying</div>
+</div>
+
+<div class="post">
+<h1>late internet thoughts</h1>
+<p>we used to express ourselves more when nobody was watching.</p>
+<div class="tag">#deepcore #internet</div>
 </div>
 
 </div>
@@ -171,21 +184,21 @@ h1 {{
 
 const streams = {RADIO};
 
-/* 🎧 play music */
+/* 🎧 play */
 function play(station) {{
     document.getElementById("audio").src = streams[station];
     document.getElementById("audio").play().catch(()=>{{}});
     document.getElementById("now").innerText = station;
 }}
 
-/* 💬 tumblr-style “life feed” */
+/* 💌 living tumblr feed */
 const lines = [
-    "someone liked your post.",
-    "you are listening to memories.",
-    "it’s raining somewhere in your mind.",
-    "this song feels like 2012.",
-    "you reblogged a feeling.",
-    "late night internet is different."
+    "you are not where you used to be.",
+    "this song feels like memory.",
+    "some nights are heavier than others.",
+    "you reblogged a feeling you can’t explain.",
+    "everything is quieter at 2:37am.",
+    "you are online, but not really here."
 ];
 
 setInterval(()=>{{
@@ -193,17 +206,19 @@ setInterval(()=>{{
 
     const post = document.createElement("div");
     post.className = "post";
+
     post.innerHTML = `
+        <h1>thought fragment</h1>
         <p>${{lines[Math.floor(Math.random()*lines.length)]}}</p>
-        <div class="tag">#tumblr #late night</div>
+        <div class="tag">#deep tumblr core</div>
     `;
 
     feed.appendChild(post);
 
-    if(feed.children.length > 6) {{
+    if(feed.children.length > 7) {{
         feed.removeChild(feed.children[0]);
     }}
-}}, 2500);
+}}, 3000);
 
 </script>
 
@@ -216,7 +231,7 @@ setInterval(()=>{{
 
 @app.route("/alice", methods=["POST"])
 def alice():
-    return {"response": {"text": "tumblr indie radio active", "end_session": False}}
+    return {"response": {"text": "deep tumblr core active", "end_session": False}}
 
 
 if __name__ == "__main__":
