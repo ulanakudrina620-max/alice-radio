@@ -4,11 +4,11 @@ import os
 app = Flask(__name__)
 
 RADIO = {
-    "POP 2000s": "https://ice1.somafm.com/poptron-128-mp3",
-    "INDIE XP": "https://ice1.somafm.com/indiepop-128-mp3",
-    "PUNK XP": "https://ice1.somafm.com/punkrockers-128-mp3",
-    "DANCE XP": "https://ice1.somafm.com/beatblender-128-mp3",
-    "CHILL XP": "https://ice1.somafm.com/groovesalad-128-mp3"
+    "MTV POP 2003": "https://ice1.somafm.com/poptron-128-mp3",
+    "MYSPACE INDIE": "https://ice1.somafm.com/indiepop-128-mp3",
+    "PUNK CD BURN": "https://ice1.somafm.com/punkrockers-128-mp3",
+    "WINAMP DANCE": "https://ice1.somafm.com/beatblender-128-mp3",
+    "LATE NIGHT CHILL": "https://ice1.somafm.com/groovesalad-128-mp3"
 }
 
 
@@ -23,76 +23,99 @@ def home():
 <!DOCTYPE html>
 <html>
 <head>
-<title>MTV XP RADIO + CHAT</title>
+<title>2003 INTERNET SIMULATOR</title>
 
 <style>
 
+/* 🌐 OLD INTERNET CRT FEEL */
 body {{
     margin: 0;
-    font-family: Tahoma;
-    background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.95)),
-    url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=2000&q=80');
-    height: 100vh;
+    font-family: Tahoma, Verdana;
+    background:
+    radial-gradient(circle at top, #1a1a2e, #000),
+    url('https://images.unsplash.com/photo-1526481280695-3c687fd5432c?auto=format&fit=crop&w=2000&q=80');
+    background-size: cover;
     overflow: hidden;
+    color: white;
 }}
 
+/* 💻 DESKTOP LAYER */
 .desktop {{
     display: flex;
     height: 100vh;
 }}
 
+/* 📁 LEFT PANEL (MYSPACE FEEL) */
 .sidebar {{
-    width: 240px;
-    background: rgba(0,0,0,0.65);
+    width: 260px;
+    background: rgba(0,0,0,0.7);
     padding: 10px;
+    border-right: 2px solid #00ffff;
 }}
 
 .btn {{
-    background: #1e6bff;
-    color: white;
-    padding: 10px;
-    margin: 6px 0;
+    background: linear-gradient(to bottom, #00aaff, #003366);
+    padding: 8px;
+    margin: 5px 0;
     cursor: pointer;
-    border-radius: 6px;
     text-align: center;
+    border: 1px solid #66ccff;
 }}
 
-.player {{
+.btn:hover {{
+    transform: scale(1.05);
+}}
+
+/* 📺 MAIN WINDOW */
+.main {{
     flex: 1;
-    padding: 20px;
-    color: white;
+    padding: 15px;
+    position: relative;
+}}
+
+/* 🎧 PLAYER BOX */
+.player {{
+    background: rgba(0,0,0,0.75);
+    border: 2px solid #00ffff;
+    padding: 15px;
+    border-radius: 8px;
+    width: 520px;
 }}
 
 audio {{
     width: 100%;
 }}
 
+/* 💬 MSN CHAT */
 .chat {{
     margin-top: 10px;
-    background: rgba(0,0,0,0.75);
-    padding: 10px;
     height: 180px;
     overflow: hidden;
+    background: rgba(0,0,0,0.8);
+    padding: 10px;
+    border: 1px solid #ff00ff;
     font-size: 12px;
 }}
 
 .msg {{
-    margin: 4px 0;
-    color: white;
+    margin: 3px 0;
+    padding: 3px;
 }}
 
-.ticker {{
+/* 🟡 BREAKING NEWS (VERY 2000s) */
+.news {{
     position: fixed;
-    bottom: 0;
+    top: 0;
     width: 100%;
     background: yellow;
     color: black;
     font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
+    border-bottom: 2px solid black;
 }}
 
-.ticker span {{
+.news span {{
     display: inline-block;
     padding-left: 100%;
     animation: move 18s linear infinite;
@@ -103,16 +126,55 @@ audio {{
     to {{ transform: translateX(-100%); }}
 }}
 
+/* 🟣 FLOATING ADS (MYSPACE ERA) */
+.ad {{
+    position: absolute;
+    right: 20px;
+    top: 120px;
+    width: 200px;
+    background: rgba(255,0,255,0.2);
+    border: 1px dashed magenta;
+    padding: 10px;
+    font-size: 11px;
+}}
+
+.online {{
+    color: lime;
+    animation: blink 1s infinite;
+}}
+
+@keyframes blink {{
+    0% {{ opacity: 1; }}
+    50% {{ opacity: 0.3; }}
+    100% {{ opacity: 1; }}
+}}
+
 </style>
 </head>
 
 <body>
 
+<!-- 🟡 BREAKING NEWS BAR -->
+<div class="news">
+<span>
+BREAKING: MySpace TOP 8 returns • MTV 2003 countdown leaked • Winamp skins trending again • Limewire revival detected • CD burning hits peak • MSN Messenger servers simulated online • Avril Lavigne dominates charts • Nokia ringtone culture returns • Napster nostalgia wave • Windows XP theme viral again •
+</span>
+</div>
+
 <div class="desktop">
 
+<!-- 📁 SIDEBAR -->
 <div class="sidebar">
+<h3>📀 RADIO STATIONS</h3>
 {buttons}
+
+<div style="margin-top:10px" class="online">
+● MSN STATUS: ONLINE
 </div>
+</div>
+
+<!-- 🎧 MAIN -->
+<div class="main">
 
 <div class="player">
 
@@ -122,18 +184,23 @@ audio {{
 
 <div class="chat" id="chat">
 <div class="msg">SYSTEM: MSN Messenger connected 💬</div>
-<div class="msg">Ashley: 2000s vibes are back 😭</div>
-<div class="msg">Mike: burning CD right now 💿</div>
+<div class="msg">Ashley: burning CDs again 💿</div>
+<div class="msg">Mike: Winamp skin hunting 🎧</div>
 </div>
 
 </div>
 
 </div>
 
-<div class="ticker">
-<span>
-BREAKING NEWS: MTV returns to peak 2003 • MySpace profiles trending again • Winamp skins downloaded worldwide • Limewire activity spikes • iPod Nano nostalgia wave • MSN Messenger servers simulated online • Pop-punk revival in NYC • Avril Lavigne dominates charts again • CD burning software downloads increase • Napster-era memories resurface •
-</span>
+<!-- 🟣 FAKE AD -->
+<div class="ad">
+<b>HOT ON MYSPACE 🔥</b><br><br>
+Avril Lavigne - Sk8er Boi<br>
+Blink-182 - I Miss You<br>
+Green Day - American Idiot<br><br>
+<span style="color:lime">DOWNLOAD VIA LIMEWIRE</span>
+</div>
+
 </div>
 
 <script>
@@ -149,18 +216,17 @@ function play(station) {{
     audio.play().catch(()=>{{}});
 }}
 
-/* 💬 MSN-STYLE CHAT VARIETY */
+/* 💬 CHAOTIC 2003 CHAT */
 const chatLines = [
-    "Ashley: OMG this song was on MySpace 😭",
-    "Mike: I miss Winamp skins lol 💿",
-    "DJ: MTV countdown vibes are back 🎧",
-    "SYSTEM: user connected via dial-up simulation",
-    "Emma: burning CDs was a lifestyle",
-    "Jake: this feels like Limewire era 💀",
-    "NYC: signal stable 🗽",
-    "Tom: iPod shuffle energy detected",
-    "Lisa: MSN status = BRB listening to pop punk",
-    "Alex: 2000s internet was WILD"
+    "Ashley: omg this is so MySpace era 😭",
+    "Mike: I just burned 12 CDs today 💿",
+    "DJ: MTV countdown vibes 🔥",
+    "SYSTEM: user logged in via dial-up",
+    "Emma: MSN status = BRB listening to punk",
+    "Jake: Limewire downloading is life 💀",
+    "Tom: Nokia ringtone nostalgia",
+    "Lisa: Avril Lavigne takeover",
+    "NYC: signal stable 🗽"
 ];
 
 setInterval(() => {{
@@ -177,7 +243,7 @@ setInterval(() => {{
         chat.removeChild(chat.children[0]);
     }}
 
-}}, 1800);
+}}, 1700);
 
 </script>
 
@@ -190,7 +256,7 @@ setInterval(() => {{
 
 @app.route("/alice", methods=["POST"])
 def alice():
-    return {"response": {"text": "MTV XP CHAT MODE ACTIVE", "end_session": False}}
+    return {"response": {"text": "2003 INTERNET SIMULATOR ACTIVE", "end_session": False}}
 
 
 if __name__ == "__main__":
