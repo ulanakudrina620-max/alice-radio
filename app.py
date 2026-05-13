@@ -3,16 +3,17 @@ import os
 
 app = Flask(__name__)
 
+# 🎧 СТАБИЛЬНЫЕ РАДИО СТАНЦИИ
 RADIO = {
-    # 🗞️ News / Talk
+    # 🗞️ News (NYC)
     "news": "https://playerservices.streamtheworld.com/api/livestream-redirect/WINSAM.mp3",
     "bloomberg": "https://playerservices.streamtheworld.com/api/livestream-redirect/WBBRAMAAC.aac",
     "wnyc": "https://fm939.wnyc.org/wnycfm",
 
-    # 🎶 Music NYC
-    "hot97": "https://playerservices.streamtheworld.com/api/livestream-redirect/WQHTFMAAC.aac",
-    "z100": "https://playerservices.streamtheworld.com/api/livestream-redirect/WHTZFMAAC.aac",
-    "power105": "https://playerservices.streamtheworld.com/api/livestream-redirect/WWPRFMAAC.aac"
+    # 🌍 СТАБИЛЬНАЯ МУЗЫКА
+    "bbc1": "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_one",
+    "bbc2": "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_two",
+    "soma": "https://ice1.somafm.com/groovesalad-128-mp3"
 }
 
 
@@ -72,9 +73,8 @@ button:hover {{
 .bloomberg {{ background: #4da6ff; }}
 .wnyc {{ background: #4dff88; color: black; }}
 
-.hot {{ background: #ffcc00; color: black; }}
-.z100 {{ background: #ff66cc; }}
-.power {{ background: #9966ff; }}
+.bbc {{ background: #ffcc00; color: black; }}
+.soma {{ background: #9966ff; }}
 
 audio {{
     width: 100%;
@@ -94,10 +94,12 @@ audio {{
     <button class="bloomberg" onclick="play('bloomberg')">Bloomberg</button>
     <button class="wnyc" onclick="play('wnyc')">WNYC</button>
 
-    <!-- 🎶 Music -->
-    <button class="hot" onclick="play('hot97')">Hot 97 🔥</button>
-    <button class="z100" onclick="play('z100')">Z100 🎶</button>
-    <button class="power" onclick="play('power105')">Power 105.1 🎤</button>
+    <hr style="margin:10px 0; opacity:0.3;">
+
+    <!-- 🌍 Stable Music -->
+    <button class="bbc" onclick="play('bbc1')">BBC Radio 1 🎶</button>
+    <button class="bbc" onclick="play('bbc2')">BBC Radio 2 🎧</button>
+    <button class="soma" onclick="play('soma')">SomaFM 🌌</button>
 
     <audio id="audio" controls autoplay></audio>
 </div>
@@ -108,9 +110,9 @@ function play(station) {{
         news: "{RADIO['news']}",
         bloomberg: "{RADIO['bloomberg']}",
         wnyc: "{RADIO['wnyc']}",
-        hot97: "{RADIO['hot97']}",
-        z100: "{RADIO['z100']}",
-        power105: "{RADIO['power105']}"
+        bbc1: "{RADIO['bbc1']}",
+        bbc2: "{RADIO['bbc2']}",
+        soma: "{RADIO['soma']}"
     }};
 
     let audio = document.getElementById("audio");
