@@ -3,60 +3,47 @@ import os
 
 app = Flask(__name__)
 
-# 🎧 STATIONS
+# 🎧 Y2K / 2000s RADIO STATIONS
 RADIO = {
 
-    # NEWS
-    "news": [
-        "https://playerservices.streamtheworld.com/api/livestream-redirect/WINSAM.mp3"
-    ],
-
-    "bloomberg": [
-        "https://playerservices.streamtheworld.com/api/livestream-redirect/WBBRAMAAC.aac"
-    ],
-
-    "wnyc": [
-        "https://fm939.wnyc.org/wnycfm"
-    ],
-
-    # NYC MUSIC
-    "z100": [
-        "https://stream.revma.ihrhls.com/zc153"
-    ],
-
-    "hot97": [
-        "https://stream.revma.ihrhls.com/zc142"
-    ],
-
-    "litefm": [
-        "https://stream.revma.ihrhls.com/zc150"
-    ],
-
-    # 2000s
-    "2000s_hits": [
+    # 💿 2000s POP
+    "2000s_pop": [
         "https://listen.181fm.com/181-2000s_128k.mp3"
     ],
 
-    "2000s_party": [
+    # 🎸 POP PUNK / ALT
+    "pop_punk": [
+        "https://listen.181fm.com/181-buzz_128k.mp3"
+    ],
+
+    # 🪩 PARTY
+    "party": [
         "https://listen.181fm.com/181-party_128k.mp3"
     ],
 
-    # CLASSIC
-    "beatles": [
-        "https://listen.181fm.com/181-beatles_128k.mp3"
+    # 🌌 NIGHT DRIVE
+    "night_drive": [
+        "https://ice1.somafm.com/groovesalad-128-mp3"
     ],
 
+    # 💃 DISCO / ABBA STYLE
     "disco": [
         "https://ice1.somafm.com/beatblender-128-mp3"
     ],
 
-    # MODERN
-    "bbc1": [
-        "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_one"
+    # 🎤 HIP-HOP
+    "hiphop": [
+        "https://stream.revma.ihrhls.com/zc142"
     ],
 
-    "soma": [
-        "https://ice1.somafm.com/groovesalad-128-mp3"
+    # 🌙 SOFT HITS
+    "soft_hits": [
+        "https://stream.revma.ihrhls.com/zc150"
+    ],
+
+    # 🇬🇧 UK HITS
+    "uk_hits": [
+        "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_one"
     ]
 }
 
@@ -73,13 +60,13 @@ def home():
 
 body {{
     margin: 0;
-    overflow-x: hidden;
+    overflow: hidden;
 
     font-family: Tahoma, Arial;
 
     background:
-    linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.85)),
-    url('https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=1600&q=80');
+    linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.88)),
+    url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=1600&q=80');
 
     background-size: cover;
     background-position: center;
@@ -95,53 +82,76 @@ body {{
 
 .rain {{
     position: fixed;
+    top: 0;
+    left: 0;
+
     width: 100%;
     height: 100%;
+
     pointer-events: none;
-    background-image:
-    linear-gradient(transparent, rgba(255,255,255,0.15));
-    animation: rain 0.3s linear infinite;
+    overflow: hidden;
+}}
+
+.drop {{
+    position: absolute;
+
+    width: 2px;
+    height: 80px;
+
+    background:
+    linear-gradient(transparent, rgba(255,255,255,0.4));
+
+    animation: rain linear infinite;
 }}
 
 @keyframes rain {{
-    from {{ background-position: 0 0; }}
-    to {{ background-position: -20px 100px; }}
+
+    from {{
+        transform: translateY(-100px);
+    }}
+
+    to {{
+        transform: translateY(100vh);
+    }}
 }}
 
 .player {{
     width: 440px;
 
     background:
-    linear-gradient(to bottom, #12296b, #07122d);
+    linear-gradient(to bottom, #132b6d, #09122f);
 
     border:
-    3px solid #70c8ff;
+    3px solid #67c8ff;
 
     border-radius: 22px;
 
     padding: 18px;
 
     box-shadow:
-    0 0 20px #0099ff,
-    0 0 50px rgba(0,153,255,0.4);
+    0 0 25px #0099ff,
+    0 0 70px rgba(0,153,255,0.4);
 
     backdrop-filter: blur(8px);
 
     position: relative;
-    z-index: 2;
-}}
-
-.topbar {{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    z-index: 10;
 }}
 
 .logo {{
     font-size: 24px;
     font-weight: bold;
-    color: #7fd4ff;
-    text-shadow: 0 0 10px #00aeff;
+
+    color: #8ad8ff;
+
+    text-shadow:
+    0 0 10px #00aaff;
+}}
+
+.top {{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }}
 
 .online {{
@@ -150,7 +160,7 @@ body {{
 }}
 
 .screen {{
-    margin-top: 14px;
+    margin-top: 15px;
 
     background: black;
 
@@ -162,30 +172,32 @@ body {{
     padding: 14px;
 
     box-shadow:
-    inset 0 0 15px rgba(0,255,255,0.3);
+    inset 0 0 20px rgba(0,255,255,0.25);
 }}
 
 .nowplaying {{
     color: #00ffcc;
-    font-size: 14px;
     margin-bottom: 10px;
+    font-size: 14px;
 }}
 
 .visualizer {{
     display: flex;
-    gap: 4px;
     align-items: flex-end;
+    gap: 4px;
+
     height: 50px;
 }}
 
 .bar {{
     width: 10px;
+
     border-radius: 4px;
 
     background:
     linear-gradient(to top, #00aaff, #00ff88);
 
-    animation: move 1s infinite ease-in-out;
+    animation: bounce 1s infinite ease-in-out;
 }}
 
 .bar:nth-child(2) {{ animation-delay: .1s; }}
@@ -195,17 +207,17 @@ body {{
 .bar:nth-child(6) {{ animation-delay: .5s; }}
 .bar:nth-child(7) {{ animation-delay: .6s; }}
 
-@keyframes move {{
-    0% {{ height: 12px; }}
+@keyframes bounce {{
+    0% {{ height: 10px; }}
     50% {{ height: 50px; }}
-    100% {{ height: 18px; }}
+    100% {{ height: 16px; }}
 }}
 
 .cd {{
-    width: 90px;
-    height: 90px;
+    width: 95px;
+    height: 95px;
 
-    margin: 16px auto;
+    margin: 18px auto;
 
     border-radius: 50%;
 
@@ -233,7 +245,7 @@ body {{
 
 .btn {{
     background:
-    linear-gradient(to bottom, #39a7ff, #0050aa);
+    linear-gradient(to bottom, #3daeff, #0050aa);
 
     border:
     2px solid #8fd8ff;
@@ -242,14 +254,14 @@ body {{
 
     padding: 14px;
 
-    text-align: center;
-
     cursor: pointer;
 
-    transition: 0.2s;
+    text-align: center;
 
     font-size: 14px;
     font-weight: bold;
+
+    transition: 0.2s;
 
     box-shadow:
     inset 0 0 10px rgba(255,255,255,0.2),
@@ -267,7 +279,7 @@ body {{
 .chat {{
     margin-top: 14px;
 
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.45);
 
     border-radius: 12px;
 
@@ -284,22 +296,45 @@ body {{
     margin-bottom: 4px;
 }}
 
+audio {{
+    width: 100%;
+    margin-top: 15px;
+
+    filter: hue-rotate(180deg);
+}}
+
+.footer {{
+    margin-top: 10px;
+    text-align: center;
+    font-size: 10px;
+    opacity: 0.5;
+}}
+
 .ticker {{
     position: fixed;
     bottom: 0;
+    left: 0;
+
     width: 100%;
-    background: #ffcc00;
-    color: black;
+
+    background: #00aaff;
+
+    color: white;
+
     font-weight: bold;
+
     padding: 6px 0;
+
     overflow: hidden;
     white-space: nowrap;
 }}
 
 .ticker span {{
     display: inline-block;
+
     padding-left: 100%;
-    animation: ticker 18s linear infinite;
+
+    animation: ticker 45s linear infinite;
 }}
 
 @keyframes ticker {{
@@ -307,30 +342,25 @@ body {{
     to {{ transform: translateX(-100%); }}
 }}
 
-audio {{
-    width: 100%;
-    margin-top: 14px;
-}}
-
-.footer {{
-    margin-top: 12px;
-    text-align: center;
-    font-size: 10px;
-    opacity: 0.5;
-}}
-
 </style>
 </head>
 
 <body>
 
-<div class="rain"></div>
+<div class="rain" id="rain"></div>
 
 <div class="player">
 
-<div class="topbar">
-<div class="logo">📺 MTV RADIO 2003</div>
-<div class="online">● online</div>
+<div class="top">
+
+<div class="logo">
+📺 MTV RADIO 2003
+</div>
+
+<div class="online">
+● online
+</div>
+
 </div>
 
 <div class="screen">
@@ -355,86 +385,151 @@ NOW PLAYING: waiting...
 
 <div class="grid">
 
-<div class="btn" onclick="play('news')">🗞 NEWS</div>
-<div class="btn" onclick="play('bloomberg')">💰 MONEY</div>
+<div class="btn" onclick="play('2000s_pop')">
+💿 POP 2000s
+</div>
 
-<div class="btn" onclick="play('z100')">🔥 Z100</div>
-<div class="btn" onclick="play('hot97')">🎤 HOT97</div>
+<div class="btn" onclick="play('pop_punk')">
+🎸 POP PUNK
+</div>
 
-<div class="btn" onclick="play('2000s_hits')">💿 2000s</div>
-<div class="btn" onclick="play('2000s_party')">🪩 PARTY</div>
+<div class="btn" onclick="play('party')">
+🪩 PARTY
+</div>
 
-<div class="btn" onclick="play('beatles')">🎸 BEATLES</div>
-<div class="btn" onclick="play('disco')">💃 ABBA</div>
+<div class="btn" onclick="play('night_drive')">
+🌌 NIGHT DRIVE
+</div>
 
-<div class="btn" onclick="play('bbc1')">🇬🇧 BBC1</div>
-<div class="btn" onclick="play('soma')">🌌 CHILL</div>
+<div class="btn" onclick="play('disco')">
+💃 DISCO / ABBA
+</div>
+
+<div class="btn" onclick="play('hiphop')">
+🎤 HIP-HOP
+</div>
+
+<div class="btn" onclick="play('soft_hits')">
+🌙 SOFT HITS
+</div>
+
+<div class="btn" onclick="play('uk_hits')">
+🇬🇧 UK HITS
+</div>
 
 </div>
 
 <div class="chat" id="chat">
-<div class="msg">Ashley: omg this song 😭</div>
-<div class="msg">Mike: hot97 still legendary</div>
-<div class="msg">SYSTEM: connected from Brooklyn 🗽</div>
+
+<div class="msg">
+Ashley: omg this feels like 2004 😭
+</div>
+
+<div class="msg">
+Mike: downloading mp3s rn 💿
+</div>
+
+<div class="msg">
+SYSTEM: connected from Brooklyn 🌧
+</div>
+
 </div>
 
 <audio id="audio" controls autoplay></audio>
 
 <div class="footer">
-WINAMP ENGINE READY • NYC WEATHER: rainy & dramatic 🌧
+windows xp connection established 📺
 </div>
 
 </div>
 
 <div class="ticker">
 <span>
-BREAKING: someone downloaded linkin_park_final_REAL.mp3 • MTV actually plays music again • NYC subway running late as usual • Avril Lavigne spotted in 2003 • windows xp detected ⚠️
+
+BREAKING: someone burned Avril Lavigne onto CD-R 💿 •
+MTV accidentally played actual music 📺 •
+MySpace top friends drama escalating ⚠️ •
+Limewire virus detected again 🦠 •
+Green Day dominating every teenager playlist 🎸 •
+SYSTEM: windows xp running smoothly somehow 💻 •
+Fall Out Boy spotted in Brooklyn 👀 •
+emo levels dangerously high tonight 🖤 •
+someone downloaded linkin_park_final_REAL.mp3 •
+MSN Messenger status changed to "away" 💬 •
+punk music heard from Queens subway 🚇 •
+Britney Spears on every screen again ✨ •
+scene kids gathering near Times Square 🌧 •
+SYSTEM: too much 2004 energy detected ⚡ •
+Paramore songs causing emotional damage 😭 •
+late night Manhattan radio transmission active 📡 •
+iPod battery critically low 🔋 •
+Hot Topic sales increased dramatically 🛍 •
+skateboarders seen near downtown NYC 🛹 •
+CD player anti-skip protection failed 💀 •
+MTV VMA chaos returning tonight 🪩 •
+dashboard confessional detected in headphones 🎧 •
+Avril Lavigne still refusing to dress normally 🧷 •
+SYSTEM ERROR: nostalgia overload 💿
+
 </span>
 </div>
 
 <script>
 
-const jokes = [
-    "finding signal in manhattan... 🗽",
-    "DJ downloading mp3s from limewire 💿",
-    "windows xp connection established 📺",
-    "mtv still alive somehow 🎵",
-    "late night brooklyn vibes 🌧",
-    "loading 2003 internet energy ✨"
-];
+// 🌧 RAIN
+for(let i = 0; i < 120; i++) {{
 
-const chatMessages = [
-    "Ashley: this track changed my life 😭",
-    "Mike: hot97 goes hard",
-    "SYSTEM: user connected from Queens",
-    "Jenny: omg abba remix 💃",
-    "Kevin: someone burn this to cd 💿",
-    "SYSTEM: signal boosted from Manhattan"
-];
+    let drop = document.createElement("div");
 
-function random(arr) {{
-    return arr[Math.floor(Math.random() * arr.length)];
+    drop.className = "drop";
+
+    drop.style.left =
+    Math.random() * window.innerWidth + "px";
+
+    drop.style.animationDuration =
+    (0.4 + Math.random()) + "s";
+
+    drop.style.opacity = Math.random();
+
+    document.getElementById("rain").appendChild(drop);
 }}
 
-setInterval(() => {{
+// 💬 CHAT
+const messages = [
 
-    const chat = document.getElementById("chat");
+    "Ashley: this song ruined my life 😭",
+    "SYSTEM: someone online from Queens",
+    "Mike: hot topic vibes 🎸",
+    "Jenny: this belongs on MTV",
+    "Kevin: burn this to cd NOW 💿",
+    "SYSTEM: signal boosted from Manhattan",
+    "emo kid detected near Brooklyn 🖤",
+    "someone still uses iTunes 👀",
+    "MSN status changed to invisible 💬"
+
+];
+
+setInterval(() => {{
 
     let div = document.createElement("div");
 
     div.className = "msg";
 
-    div.innerText = random(chatMessages);
+    div.innerText =
+    messages[Math.floor(Math.random()*messages.length)];
+
+    let chat = document.getElementById("chat");
 
     chat.appendChild(div);
 
-    if (chat.children.length > 5) {{
+    if(chat.children.length > 5) {{
         chat.removeChild(chat.children[0]);
     }}
 
 }}, 4000);
 
 
+// 🎧 PLAYER
 function play(station) {{
 
     const streams = {RADIO};
@@ -450,7 +545,7 @@ function play(station) {{
 
     function next() {{
 
-        if (i >= list.length) return;
+        if(i >= list.length) return;
 
         audio.src = list[i];
 
@@ -460,10 +555,12 @@ function play(station) {{
         }});
 
         let t = setTimeout(() => {{
-            if (audio.readyState < 2) {{
+
+            if(audio.readyState < 2) {{
                 i++;
                 next();
             }}
+
         }}, 4000);
 
         audio.onplaying = () => clearTimeout(t);
