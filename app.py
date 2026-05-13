@@ -1,28 +1,33 @@
 from flask import Flask, request, jsonify
+import os
 
 app = Flask(__name__)
+app.config["JSON_AS_ASCII"] = False
 
 RADIO = {
-    "1010 wins": "https://playerservices.streamtheworld.com/api/livestream-redirect/WINSAM.mp3",
+    "news": "https://playerservices.streamtheworld.com/api/livestream-redirect/WINSAM.mp3",
     "bloomberg": "https://playerservices.streamtheworld.com/api/livestream-redirect/WBBRAMAAC.aac",
     "wnyc": "https://fm939.wnyc.org/wnycfm"
 }
 
-current_station = "1010 wins"
+current_station = "news"
 
 
 @app.route("/", methods=["POST", "GET"])
-def main():
+def alice_webhook():
     global current_station
 
     data = request.get_json(silent=True) or {}
-    command = data.get("request", {}).get("command", "").lower()
 
-    text = "Скажи: новости, Bloomberg или WNYC"
+    command = ""
+    if "request" in data:
+        command = data["request"].get("command", "").lower()
+
+    text = "Скажи: новости, bloomberg или wnyc"
 
     if "новости" in command or "news" in command:
-        current_station = "1010 wins"
-        text = "Включаю новости Нью-Йорка — 1010 WINS"
+        current_station = "news"
+        text = "Включаю новости Нью-Йорка"
 
     elif "блумберг" in command or "bloomberg" in command:
         current_station = "bloomberg"
@@ -42,13 +47,10 @@ def main():
         "response": {
             "text": text,
             "end_session": False
-        },
-        "station": current_station,
-        "stream_url": RADIO[current_station]
+        }
     })
 
 
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
